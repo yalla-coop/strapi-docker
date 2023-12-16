@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    // ... other options
+    "resolveJsonModule": true,
+    // ... other options
+  },
+  // ... other configurations
+}
