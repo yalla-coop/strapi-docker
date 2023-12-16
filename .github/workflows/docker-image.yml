@@ -28,3 +28,14 @@ jobs:
         with:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
+
+      - name: Notify discord
+        uses: rtCamp/action-discord-notify@v1.0.1
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_TITLE: "Docker Image"
+          DISCORD_DESCRIPTION: "Docker image has been updated"
+          DISCORD_COLOR: "#ff0000"
+          DISCORD_FOOTER: "Docker Image"
+          DISCORD_AUTHOR: "Docker Image"
+          DISCORD_AUTHOR_URL: "https://discord.com/api/webhooks/1185606535003517009/2kwa0kKHUZySgEEhX_cz6Ar_TIUZh6otGjJ9tetp9NKrmg1CErEPYk5TsVFQkEk4U4wE"
