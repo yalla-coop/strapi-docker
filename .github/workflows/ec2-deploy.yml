@@ -57,13 +57,23 @@ jobs:
         run: |
           echo "${{ env.AWS_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
-      - name: Pull Docker image
+
+      # OLD DEPLOYMENT STEPS
+      # - name: Pull Docker image
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker pull ramyshurafa/strapi:latest'
+      # - name: Stop running container
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker stop strapi || true'
+      #     ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker rm strapi || true'
+      # - name: Run new container
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker run -d --name strapi -p 80:1337 ramyshurafa/strapi:latest'
+
+      # New deployment steps, using docker-compose file
+      - name: Copy docker-compose file
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker pull ramyshurafa/strapi:latest'
-      - name: Stop running container
+          scp -o StrictHostKeyChecking=no -i key.pem docker-compose.yml ${{ env.VM_IP }}:~/docker-compose.yml
+      - name: Run docker-compose
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker stop strapi || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker rm strapi || true'
-      - name: Run new container
-        run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker run -d --name strapi -p 80:1337 ramyshurafa/strapi:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker-compose up -d'
