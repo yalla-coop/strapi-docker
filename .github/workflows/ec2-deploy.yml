@@ -57,11 +57,11 @@ jobs:
         run: |
           echo "${{ env.AWS_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
+      - name: Pull Docker image
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker pull ramyshurafa/strapi:latest'
 
       # OLD DEPLOYMENT STEPS
-      # - name: Pull Docker image
-      #   run: |
-      #     ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker pull ramyshurafa/strapi:latest'
       # - name: Stop running container
       #   run: |
       #     ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker stop strapi || true'
