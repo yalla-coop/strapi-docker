@@ -8,6 +8,7 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   AWS_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
   VM_IP: ${{ secrets.VM_IP }}
+  ENV_FILE: ${{ secrets.ENV_FILE }}
 
 jobs:
   build:
@@ -74,6 +75,9 @@ jobs:
       - name: Copy docker-compose file
         run: |
           scp -o StrictHostKeyChecking=no -i key.pem docker-compose.yml ${{ env.VM_IP }}:~/docker-compose.yml
+      - name: Create env file
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'echo "${{ env.ENV_FILE }}" > ~/.env'
       - name: Run docker-compose
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.VM_IP }} 'docker-compose up -d'
